@@ -1,6 +1,9 @@
 name: auto-grading
 
-on: [push]
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
 
 env:
   CARGO_TERM_COLOR: always
@@ -8,6 +11,7 @@ env:
 
 jobs:
   basic-test:
+    if: github.repository_owner == 'LearningOS' && github.repository != 'LearningOS/2026s-oscamp-professional-2026s-arceos-arceos-classroom-2026s-arceos-oscamp' && !startsWith(github.event.repository.name, 'preparing-') && github.event_name != 'pull_request' && vars.STUDENT_GITHUB != '' && github.actor == vars.STUDENT_GITHUB
     name: Basic Test
     runs-on: ubuntu-latest
     outputs:
@@ -74,6 +78,7 @@ jobs:
           echo "basic_points=$score" >> $GITHUB_OUTPUT
 
   deploy:
+    if: github.repository_owner == 'LearningOS' && github.repository != 'LearningOS/2026s-oscamp-professional-2026s-arceos-arceos-classroom-2026s-arceos-oscamp' && !startsWith(github.event.repository.name, 'preparing-') && github.event_name != 'pull_request' && vars.STUDENT_GITHUB != '' && github.actor == vars.STUDENT_GITHUB
     name: Report Score to Server
     needs: basic-test
     runs-on: ubuntu-latest
